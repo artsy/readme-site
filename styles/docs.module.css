@@ -1,0 +1,20 @@
+.docs li {
+  padding: 4px;
+  color:rgb(0, 0, 0)
+}
+
+.docs a {
+  color: rgb(0, 4, 243);
+  text-decoration: none;
+}
+
+.docs a:link,
+.docs a:visited {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+}
+
+.docs a:hover {
+  text-decoration: underline;
+  color: rgb(0, 0, 0);
+}

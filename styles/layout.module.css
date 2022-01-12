@@ -1,0 +1,60 @@
+.header {
+  position: fixed;
+  width: 100%;
+  background: rgb(253, 253, 253);
+  z-index: 1;
+  border-bottom: 1px solid rgb(194, 194, 194);
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  margin: 0;
+}
+
+.titleLink {
+  color: rgb(3, 0, 0);
+  text-decoration: none;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  display: inline;
+  margin-right: 16px;
+}
+
+.menu li a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.menu li a:hover {
+  color: rgb(0, 0, 0);
+  text-decoration: underline;
+}
+
+.footer {
+  display: flex;
+  flex: 1;
+  padding: 2rem 0;
+  border-top: 1px solid rgb(194, 194, 194);
+  justify-content: center;
+  align-items: center;
+}
+
+.footer a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
