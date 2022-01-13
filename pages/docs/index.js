@@ -1,67 +1,82 @@
 import Link from 'next/link';
 import Head from 'next/head'
 import styles from '../../styles/docs.module.css';
-// import fs from 'fs';
-// import { Converter } from 'showdown';
+import { Fragment } from 'react';
 
-export default function Sections({ sections }) {
+export default function Docs({ sections, sectionDocs }) {
     return (
         <div className="container">
             <Head>
-                <title>Sections</title>
+                <title>Docs</title>
             </Head>
-            <h1>Sections</h1>
-            <ul className={styles.docs}>
+            <h1>Docs</h1>
                 {sections.map(section => (
-                    <li key={section.title}>
-                        <Link href={`/docs/${section.title}`}>
-                            {section.title}
-                        </Link>
-                    </li>
+                  <Fragment key={section.sha}>
+                    <h3 key={section.title}>{section.title}</h3>
+                    {<ul className={styles.docs}>
+                      {sectionDocs[section.title].map(doc => doc.slug).map(slug => {
+                        return (
+                          <li key={section.title+"+"+slug}>
+                            <Link href={`/docs/${slug}`}>
+                              {slug}
+                            </Link>
+                          </li>
+                        )
+                      })}
+                    </ul>}
+                  </Fragment>
                 ))}
-            </ul>
-            {/* <ul className={styles.docs}>
-                {docs.map((doc) => (
-                    <li key={doc.slug}>
-                        <Link href={`/docs/${doc.slug}`}>
-                            {doc.title}
-                        </Link>
-                    </li>
-                ))}
-            </ul> */}
 
         </div>
     );
 }
 
 export async function getStaticProps() {
-//   const files = fs.readdirSync('docs');
-//   const docs = files.map((file) => {
-//       const doc = file.slice(0, file.indexOf('.md'));
-//       const content = fs.readFileSync(`docs/${doc}.md`, 'utf8');
-//       const converter = new Converter({ metadata: true });
-//       converter.makeHtml(content);
-//       const meta = converter.getMetadata();
-//       const { title } = meta;
-//       return {
-//           slug: doc,
-//           title,
-//       };
-//   });
-  const res = await fetch('https://api.github.com/repos/artsy/README/contents');
-  const data = await res.json();
+  let res = await fetch('https://api.github.com/repos/artsy/README/contents',
+    {
+      headers: {'Authorization': `token ${process.env.GITHUB_TOKEN}`}
+    });
+  let data = await res.json();
   const sections = data.reduce((result, artifact) => {
         if (artifact.type === 'dir' && artifact.name.charAt(0) !== '.') {
-            result.push({
-                title: artifact.name,
-            });
+            if (artifact.name !== 'scripts') {
+              result.push({
+                  title: artifact.name,
+                  sha: artifact.sha.slice(0, 5),
+              });
+            }
         }
         return result;
     }, []);
-  console.log(sections);
+
+    const sectionContents = await Promise.all(sections.map(async section => {
+    let d = {};
+      const res = await fetch(`https://api.github.com/repos/artsy/README/contents/${section.title}`,
+        {
+          headers: {'Authorization': `token ${process.env.GITHUB_TOKEN}`}
+        });
+      const data = await res.json();
+      let docs = data.reduce((result, artifact) => {
+          if (artifact.type === 'file' && artifact.name.includes('.md')) {
+              result.push({
+                slug: artifact.name.slice(0, artifact.name.indexOf('.md')),
+                sha: artifact.sha,
+              });
+          }
+          return result;
+      }, []);
+      if (docs.length > 0) {
+        d[section.title] = docs;
+      }
+      docs = [];
+    return d;
+  }));
+  let sectionDocs = Object.assign({}, ...sectionContents);
+
   return {
       props: {
         sections,
+        sectionDocs,
       },
   };
 }
