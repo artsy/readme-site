@@ -17,7 +17,7 @@ export default function Docs({ sections, sectionDocs }) {
                       {sectionDocs[section.title].map(doc => doc.slug).map(slug => {
                         return (
                           <li key={section.title+"+"+slug}>
-                            <Link href={`/docs/${slug}`}>
+                            <Link href={`/docs/${section.title}/${slug}`}>
                               {slug}
                             </Link>
                           </li>
