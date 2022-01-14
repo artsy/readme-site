@@ -1,6 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 The site is currently being hosted on S3: http://readme-site.s3-website-us-east-1.amazonaws.com/
+
 Hackaton project card: https://www.notion.so/artsy/Supercharge-our-artsy-README-content-with-a-statically-built-site-navigation-and-fast-search-97bf473e540a4191a518500060a57790
 
 ## Getting Started
